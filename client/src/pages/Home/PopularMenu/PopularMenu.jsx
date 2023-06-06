@@ -16,7 +16,7 @@ const PopularMenu = () => {
         {popular.map((item) => (
           <MenuItem key={item._id} item={item}></MenuItem>
         ))}
-      </div>{" "}
+      </div>
       <div className="text-center">
         <button className="btn btn-outline btn-primary my-8 border-0 border-b-4 text-white">
           View Full Menu
