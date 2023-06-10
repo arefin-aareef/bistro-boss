@@ -31,9 +31,9 @@ const AllUsers = () => {
         })
     }
 
-    const handleDelete = (user) => {
+    // const handleDelete = (user) => {
 
-    }
+    // }
 
     return (
         <div className="w-full">
@@ -67,7 +67,7 @@ const AllUsers = () => {
                     <FaUserShield></FaUserShield>
                   </button>}</td>
             <td><button
-                    onClick={() => handleDelete(user)}
+                    // onClick={() => handleDelete(user)}
                     className="btn bg-red-600 text-white"
                   >
                     <FaTrashAlt></FaTrashAlt>
