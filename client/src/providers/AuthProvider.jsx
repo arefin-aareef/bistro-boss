@@ -10,7 +10,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { app } from "../firebase/firebase.config";
-import axios from 'axios';
+// import axios from 'axios';
 
 export const AuthContext = createContext(null);
 
@@ -49,29 +49,59 @@ const AuthProvider = ({ children }) => {
     });
   };
 
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+  //     setUser(currentUser);
+  //     console.log("current user", currentUser);
+
+  //     // get and set token
+  //     if (currentUser) {
+  //       axios.post("http://localhost:5000/jwt", { email: currentUser.email })
+  //         .then((data) => {
+  //           // console.log(data.data.token);
+  //           localStorage.setItem('access-token', data.data.token)
+  //           setLoading(false);
+  //         })
+  //       }
+  //       else {
+  //         localStorage.removeItem('access-token')
+  //       }
+      
+  //   });
+  //   return () => {
+  //     return unsubscribe;
+  //   };
+  // }, []);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       console.log("current user", currentUser);
-
+  
       // get and set token
       if (currentUser) {
-        axios.post("http://localhost:5000/jwt", { email: currentUser.email })
+        fetch("http://localhost:5000/jwt", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: currentUser.email }),
+        })
+          .then((response) => response.json())
           .then((data) => {
-            // console.log(data.data.token);
-            localStorage.setItem('access-token', data.data.token)
+            // console.log(data.token);
+            localStorage.setItem("access-token", data.token);
             setLoading(false);
-          })
-        }
-        else {
-          localStorage.removeItem('access-token')
-        }
-      
+          });
+      } else {
+        localStorage.removeItem("access-token");
+      }
     });
     return () => {
       return unsubscribe;
     };
   }, []);
+  
 
   const authInfo = {
     user,

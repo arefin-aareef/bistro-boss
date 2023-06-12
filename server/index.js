@@ -4,6 +4,8 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
+const stripe = require("stripe")(process.env.PAYMENT_SECRET_KEY);
+
 
 // middleware
 app.use(cors())
@@ -11,7 +13,7 @@ app.use(express.json())
 
 const verifyJWT = (req, res, next) => {
   const authorization = req.headers.authorization;
-  console.log(authorization);
+  // console.log(authorization);
   if(!authorization) {
     return res.status(401).send({error: true, message: 'unauthorized access'})
   }
@@ -168,7 +170,22 @@ async function run() {
       res.send(result)
     })
 
+    // create payment intent
 
+    app.post("/create-payment-intent", verifyJWT, async (req, res) => {
+      const { price } = req.body;
+      const amount = price*100;
+      console.log(price, amount);
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ['card']
+      })
+      console.log('payment intent here', paymentIntent);
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
+    })
 
 
 
